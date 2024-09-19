@@ -1,11 +1,11 @@
 package com.itschool.library.unit_test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itschool.library.models.dtos.BookDTO;
+import com.itschool.library.models.dtos.RequestBookDTO;
+import com.itschool.library.models.dtos.ResponseBookDTO;
 import com.itschool.library.models.entities.Book;
 import com.itschool.library.repositories.BookRepositories;
 import com.itschool.library.services.BookServicesImpl;
-import org.apache.coyote.Request;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,27 +22,27 @@ class BookServiceImplTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private BookRepositories bookRepositories;
+    private BookRepositories bookRepository;
 
     @InjectMocks
-    private BookServicesImpl bookServices;
-
+    private BookServicesImpl bookService;
 
     @Test
     void testCreateBook() {
         //given
-        BookDTO requestBookDTO = new BookDTO();
+        RequestBookDTO requestBookDTO = new RequestBookDTO();
         requestBookDTO.setTitle("Test Title");
         requestBookDTO.setAuthor("Test Author");
         requestBookDTO.setIsbn("Test ISBN");
         requestBookDTO.setGenre("Test Genre");
 
-        BookDTO responseBookDTO = new BookDTO();
+        ResponseBookDTO responseBookDTO = new ResponseBookDTO();
         responseBookDTO.setId(1L);
         responseBookDTO.setTitle("Test Title");
         responseBookDTO.setAuthor("Test Author");
         responseBookDTO.setIsbn("Test ISBN");
         responseBookDTO.setGenre("Test Genre");
+
         Book bookEntity = new Book();
         bookEntity.setId(1L);
         bookEntity.setTitle("Test Title");
@@ -58,11 +58,11 @@ class BookServiceImplTest {
         savedBookEntity.setGenre("Test Genre");
 
         when(objectMapper.convertValue(requestBookDTO, Book.class)).thenReturn(bookEntity);
-        when(bookRepositories.save(bookEntity)).thenReturn(bookEntity);
-        when(objectMapper.convertValue(savedBookEntity, BookDTO.class)).thenReturn(responseBookDTO);
+        when(bookRepository.save(bookEntity)).thenReturn(bookEntity);
+        when(objectMapper.convertValue(savedBookEntity, ResponseBookDTO.class)).thenReturn(responseBookDTO);
 
         //when
-        BookDTO savedBookDTO = bookServices.createBook(requestBookDTO);
+        ResponseBookDTO savedBookDTO = bookService.createBook(requestBookDTO);
 
         //then
         assertEquals(requestBookDTO.getAuthor(), savedBookDTO.getAuthor());
