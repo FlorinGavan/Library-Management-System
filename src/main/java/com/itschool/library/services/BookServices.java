@@ -12,5 +12,4 @@ public interface BookServices {
     ResponseBookDTO updateBookCopies(Long bookId, int newCopiesAvailable);
 
     List<ResponseBookDTO> getBooks(String title, String author, String genre);
-
 }
